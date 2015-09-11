@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Demo Module
+ */
+
+
+/**
+ * Implements hook_block_info().
+ */
+function demo_block_form_block_info() {
+  $blocks = array();
+  // Block for File Listing under Project Content section.
+  $blocks['demo_custom_form'] = array(
+    'info' => t('Demo Custom Form.'),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function demo_block_form_block_view($delta = '') {
+  switch ($delta) {
+    case 'demo_custom_form':
+      $block['subject'] = 'Demo Custom Block';
+      $block['content'] = array(
+        // Calling helper function to return files.
+        '#markup' => _demo_block_form_get_custom_form(),
+      );
+      break;
+  }
+  return $block;
+}
+
+/**
+  * Block view callback,
+ */ 
+function _demo_block_form_get_custom_form() {
+  // Get Files Listing form for Project Content section.
+  $demo_form_block = drupal_get_form('_demo_block_form_custom_form_builder');
+  $rendered_form = drupal_render($demo_form_block);
+  return $rendered_form;
+}
+
+/**
+  *  Custom form builder callback.
+ */ 
+function _demo_block_form_custom_form_builder($form, &$form_state) {
+  $form['demo_fieldset'] = array(
+    '#type' => 'fieldset', 
+    '#title' => t('Demo Fieldset'), 
+    '#weight' => 5, 
+    '#collapsible' => TRUE, 
+    '#collapsed' => FALSE,
+  );
+  $form['demo_fieldset']['demo_textarea'] = array(
+    '#type' => 'textarea', 
+    '#title' => t('Demo Text Area'), 
+  );
+  return $form;
+}
+
+/**
+  * Custom Submit handler for form.
+ */ 
+function _demo_block_form_custom_form_builder_submit($form, &$form_state) {
+  drupal_set_message("Form submit successfull.");
+}
